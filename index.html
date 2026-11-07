@@ -545,7 +545,7 @@ function firebaseReady(){
     await Promise.all([loadScript(base+'firebase-auth-compat.js'), loadScript(base+'firebase-firestore-compat.js')]);
     if(!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
     const db = firebase.firestore();
-    try{ await db.enablePersistence({synchronizeTabs:true}); }catch(e){}
+    // Persistence 초기화는 첫 화면을 막아 느려질 수 있어 생략합니다.
     if(!firebase.auth().currentUser) await firebase.auth().signInAnonymously();
     return db;
   })();
