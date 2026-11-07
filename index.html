@@ -1256,7 +1256,7 @@ async function openFamily(code, meId){
     const st=await makeStore(code);
     if(!(await st.exists())){ toast('그 가족 코드를 찾을 수 없어요'); lsSet(SESS_KEY,null); S.phase=S.mode==='cloud'?'join':'start'; render(); return; }
     S.store=st; S.code=code; S.meId=meId; S.prev=null; S.shown={};
-    S.loaded={config:false,members:false,feed:false,uns:false};
+    S.loaded={config:false,members:false,feed:true,uns:true};
     S.unsubs.push(st.onConfig(c=>{ S.config=c; S.loaded.config=true; tick(); }, onErr));
     S.unsubs.push(st.onMembers(m=>{ S.members=m; S.loaded.members=true; tick(); }, onErr));
     S.unsubs.push(st.onFeed(f=>{ S.feed=f; S.loaded.feed=true; tick(); }, onErr));
