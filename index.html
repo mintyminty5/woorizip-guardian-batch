@@ -963,7 +963,7 @@ function statusChip(l){
 }
 function logRow(l){
   return `<div class="log">
-    ${l.thumb?`<button class="thumb" data-act="zoom" data-id="${esc(l.id)}" aria-label="사진 크게 보기"><img src="${esc(l.thumb)}" alt=""></button>`:`<div class="thumb" style="display:grid;place-items:center;font-size:26px;color:${zoneColor(l.zone)}">${renderIcon(l.emoji)}</div>`}
+    ${l.thumb?`<button class="thumb" data-act="zoom" data-id="${esc(l.id)}" aria-label="사진 크게 보기"><img loading="lazy" decoding="async" src="${esc(l.thumb)}" alt=""></button>`:`<div class="thumb" style="display:grid;place-items:center;font-size:26px;color:${zoneColor(l.zone)}">${renderIcon(l.emoji)}</div>`}
     <div><div><span class="who">${esc(emojiOf(l.uid))} ${esc(nameOf(l.uid))}</span> ${esc(l.name)}${l.double?' <b style="color:var(--red)">×2</b>':''}</div>
       <div class="meta">${statusChip(l)}<span>${ago(l.createdAt)}</span></div>
       ${l.note?`<div class="cm">${esc(l.note)}</div>`:''}
@@ -1032,7 +1032,7 @@ function reviewView(){
   if(!q.length) return out+`<div class="empty">지금은 확인할 인증이 없어요.</div>`;
   return out+q.map(l=>{ const ok=canReview(l); const src=S.photos[l.id]||l.thumb;
     return `<article class="box rv">
-      ${src?`<button class="ph" data-act="zoom" data-id="${esc(l.id)}" aria-label="사진 크게 보기" style="width:100%"><img class="ph" style="border:0" src="${esc(src)}" alt="${esc(l.name)} 인증 사진"></button>`:''}
+      ${src?`<button class="ph" data-act="zoom" data-id="${esc(l.id)}" aria-label="사진 크게 보기" style="width:100%"><img loading="lazy" decoding="async" class="ph" style="border:0" src="${esc(src)}" alt="${esc(l.name)} 인증 사진"></button>`:''}
       <div class="body"><div class="t">${esc(emojiOf(l.uid))} ${esc(nameOf(l.uid))}의 ${esc(l.name)}${l.double?' <b style="color:var(--red)">×2</b>':''}</div>
         <div class="small muted">${ago(l.createdAt)}${l.custom?', 목록에 없는 일':''}</div>
         ${l.note?`<div class="cm" style="margin-top:8px">${esc(l.note)}</div>`:''}
@@ -1131,10 +1131,10 @@ async function onPhoto(e){
   try{
     const src=await readAsDataURL(f);
     const img=await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=src; });
-    if(slot){ S.draft[slot]=img; pv.innerHTML=`<img src="${shrink(img,600,.7)}" alt="${slot==='before'?'청소 전':'청소 후'} 사진">`;
+    if(slot){ S.draft[slot]=img; pv.innerHTML=`<img loading="lazy" decoding="async" src="${shrink(img,600,.7)}" alt="${slot==='before'?'청소 전':'청소 후'} 사진">`;
       if(S.draft.before && S.draft.after){ const combo=combine(S.draft.before, S.draft.after); S.draft.photo=combo.full; S.draft.thumb=combo.thumb; }
     } else { S.draft.photo=shrink(img,1080,.72); S.draft.thumb=shrink(img,180,.6);
-      pv.innerHTML=`<img src="${S.draft.photo}" alt="올릴 사진 미리보기">`; }
+      pv.innerHTML=`<img loading="lazy" decoding="async" src="${S.draft.photo}" alt="올릴 사진 미리보기">`; }
     $('#send').scrollIntoView({block:'nearest', behavior: reduced()?'auto':'smooth'});
   }catch(err){ console.error(err); pv.innerHTML='<span>이 사진은 열 수 없어요. 다시 골라 주세요.</span>'; }
   e.target.value='';
@@ -1172,10 +1172,10 @@ async function checkRole(id, btn){
 }
 async function zoom(id){
   const l=allLogs().find(x=>x.id===id); if(!l) return;
-  modalRoot.innerHTML=`<div class="lb" role="dialog" aria-label="사진">${l.thumb?`<img src="${esc(l.thumb)}" alt="인증 사진" style="filter:blur(2px)">`:'<span class="ld">불러오는 중…</span>'}</div>`;
+  modalRoot.innerHTML=`<div class="lb" role="dialog" aria-label="사진">${l.thumb?`<img loading="lazy" decoding="async" src="${esc(l.thumb)}" alt="인증 사진" style="filter:blur(2px)">`:'<span class="ld">불러오는 중…</span>'}</div>`;
   let p=S.photos[id];
   if(p===undefined){ try{ p=await S.store.getPhoto(id); }catch(e){ p=null; } S.photos[id]=p||null; }
-  const lb=modalRoot.querySelector('.lb'); if(lb && p) lb.innerHTML=`<img src="${esc(p)}" alt="인증 사진">`;
+  const lb=modalRoot.querySelector('.lb'); if(lb && p) lb.innerHTML=`<img loading="lazy" decoding="async" src="${esc(p)}" alt="인증 사진">`;
 }
 function openGoal(){
   const m=me(), s=stats(S.meId), done=s.goal && s.goal.pct>=100, fresh=done||!s.goal;
